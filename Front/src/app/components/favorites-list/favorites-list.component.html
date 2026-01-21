@@ -1,0 +1,45 @@
+<div class="favorites-container">
+  <h1>Mes Favoris 💙</h1>
+
+  <div *ngIf="favorites.length === 0" class="empty-state">
+    <p>Vous n'avez pas encore de favoris.</p>
+    <a routerLink="/pollution/list" class="btn btn-primary"
+      >Parcourir les pollutions</a
+    >
+  </div>
+
+  <div *ngIf="favorites.length > 0" class="favorites-grid">
+    <div *ngFor="let pollution of favorites" class="favorite-card">
+      <div class="card-header">
+        <h3>{{ pollution.title }}</h3>
+        <button
+          class="btn-remove"
+          (click)="removeFavorite(pollution.id)"
+          title="Retirer des favoris"
+        >
+          ❌
+        </button>
+      </div>
+
+      <div class="card-body">
+        <p class="pollution-type">
+          <span class="badge">{{ pollution.pollutionType }}</span>
+        </p>
+        <p class="location">📍 {{ pollution.location }}</p>
+        <p class="date">
+          📅 {{ pollution.observationDate | date : "dd/MM/yyyy" }}
+        </p>
+        <p class="description">
+          {{ pollution.description | slice : 0 : 100
+          }}{{ pollution.description.length > 100 ? "..." : "" }}
+        </p>
+      </div>
+
+      <div class="card-actions">
+        <button class="btn btn-primary" (click)="viewDetail(pollution.id)">
+          Voir les détails
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

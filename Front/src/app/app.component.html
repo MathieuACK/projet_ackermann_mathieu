@@ -1,0 +1,53 @@
+<div class="app-container">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <h1>🌍 Pollution Tracker</h1>
+    </div>
+    <div class="navbar-menu">
+      <a
+        routerLink="/pollution/list"
+        routerLinkActive="active"
+        class="nav-link"
+      >
+        📋 Liste des pollutions
+      </a>
+      <a
+        routerLink="/pollution/report"
+        routerLinkActive="active"
+        class="nav-link"
+      >
+        ➕ Signaler une pollution
+      </a>
+      @if (userName) {
+      <a
+        routerLink="/pollution/favorites"
+        routerLinkActive="active"
+        class="nav-link favorites-link"
+      >
+        💙 Favoris @if ((favoritesCount$ | async)! > 0) {
+        <span class="badge">{{ favoritesCount$ | async }}</span>
+        }
+      </a>
+      } @if (!userName) {
+      <a routerLink="/login" routerLinkActive="active" class="nav-link">
+        🔐 Connexion
+      </a>
+      } @if (userName) {
+      <div class="nav-user">
+        <span>{{ userName }}</span>
+        <button class="btn btn-link" (click)="logout()">Se déconnecter</button>
+      </div>
+      }
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="footer">
+    <p>
+      &copy; 2025 Pollution Tracker - Application de signalement de pollutions
+    </p>
+  </footer>
+</div>

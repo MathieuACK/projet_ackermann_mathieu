@@ -1,0 +1,186 @@
+<div class="pollution-detail-container">
+  @if (loading) {
+  <div class="loading">
+    <div class="spinner"></div>
+    <p>Chargement des détails...</p>
+  </div>
+  } @if (error && !loading) {
+  <div class="error-message">
+    <h2>❌ Erreur</h2>
+    <p>{{ error }}</p>
+    <button class="btn btn-primary" (click)="goBack()">
+      Retour à la liste
+    </button>
+  </div>
+  } @if (pollution && !loading) {
+  <div class="detail-content">
+    <div class="detail-header">
+      <button class="btn btn-back" (click)="goBack()">
+        ← Retour à la liste
+      </button>
+      <div class="header-actions">
+        @if (isLogged) {
+        <button
+          class="btn"
+          [class.btn-favorite]="isFavorite()"
+          [class.btn-add-favorite]="!isFavorite()"
+          (click)="toggleFavorite()"
+        >
+          {{
+            isFavorite() ? "❤️ Retirer des favoris" : "🤍 Ajouter aux favoris"
+          }}
+        </button>
+        }
+        <button class="btn btn-danger" (click)="deletePollution()">
+          🗑️ Supprimer
+        </button>
+        @if (isLogged && !editMode){
+        <button class="btn btn-secondary" (click)="enterEdit()">
+          ✏️ Modifier
+        </button>
+        } @if (editMode) {
+        <div class="edit-actions">
+          <button class="btn btn-success" (click)="saveEdit()">
+            💾 Enregistrer
+          </button>
+          <button class="btn" (click)="cancelEdit()">Annuler</button>
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="detail-card">
+      <div class="card-header">
+        <h1>{{ pollution.title }}</h1>
+        <span class="pollution-type-badge">{{ pollution.pollutionType }}</span>
+      </div>
+
+      <div class="card-body">
+        @if (pollution.photographUrl) {
+        <div class="pollution-image-large">
+          <img
+            [src]="pollution.photographUrl"
+            [alt]="pollution.title"
+            (error)="$any($event.target).src = 'assets/placeholder.png'"
+          />
+        </div>
+        }
+
+        <section class="detail-section">
+          <h2>📝 Description</h2>
+          @if (!editMode){
+          <div>
+            <p class="description-text">{{ pollution.description }}</p>
+          </div>
+          } @if(editMode){
+          <div>
+            <textarea
+              [(ngModel)]="editablePollution!.description"
+              rows="4"
+              class="form-control"
+            ></textarea>
+          </div>
+          }
+        </section>
+
+        <section class="detail-section">
+          <h2>ℹ️ Informations</h2>
+          <div class="info-grid">
+            <div class="info-box">
+              <span class="info-label">Type de pollution</span>
+              @if (!editMode) {
+              <span class="info-value">{{ pollution.pollutionType }}</span>
+              } @if (editMode){
+              <select [(ngModel)]="editablePollution!.pollutionType">
+                <option>Plastique</option>
+                <option>Chimique</option>
+                <option>Dépôt sauvage</option>
+                <option>Eau</option>
+                <option>Air</option>
+                <option>Autre</option>
+              </select>
+              }
+            </div>
+            <div class="info-box">
+              <span class="info-label">Date d'observation</span>
+              @if (!editMode) {
+              <span class="info-value">
+                {{ pollution.observationDate | date : "dd MMMM yyyy" }}
+              </span>
+              } @if (editMode){
+              <input
+                type="date"
+                [(ngModel)]="editablePollution!.observationDate"
+              />
+              }
+            </div>
+            <div class="info-box">
+              <span class="info-label">Localisation</span>
+              @if (!editMode){
+              <span class="info-value">{{ pollution.location }}</span>
+              } @if (editMode){
+              <input
+                [(ngModel)]="editablePollution!.location"
+                class="form-control"
+              />
+              }
+            </div>
+            <div class="info-box">
+              <span class="info-label">ID de signalement</span>
+              <span class="info-value">#{{ pollution.id }}</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="detail-section">
+          <h2>🌍 Coordonnées GPS</h2>
+          <div class="coordinates-box">
+            <div class="coordinate">
+              <span class="coordinate-label">Latitude:</span>
+              @if (!editMode){
+              <span class="coordinate-value">{{ pollution.latitude }}°</span>
+              } @if (editMode){
+              <input
+                type="number"
+                step="0.000001"
+                [(ngModel)]="editablePollution!.latitude"
+              />
+              }
+            </div>
+            <div class="coordinate">
+              <span class="coordinate-label">Longitude:</span>
+              @if (!editMode){
+              <span class="coordinate-value">{{ pollution.longitude }}°</span>
+              } @if (editMode){
+              <input
+                type="number"
+                step="0.000001"
+                [(ngModel)]="editablePollution!.longitude"
+              />
+              }
+            </div>
+            <button class="btn btn-map" (click)="openMap()">
+              🗺️ Ouvrir dans Google Maps
+            </button>
+          </div>
+        </section>
+
+        @if (pollution.photographUrl) {
+        <section class="detail-section">
+          <h2>📷 URL de la photographie</h2>
+          <div class="url-box">
+            <a
+              [href]="pollution.photographUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {{ pollution.photographUrl }}
+            </a>
+          </div>
+        </section>
+        }
+      </div>
+    </div>
+  </div>
+  }
+</div>
