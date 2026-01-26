@@ -111,11 +111,11 @@ export class PollutionListComponent implements OnInit {
 
       const matchesDateFrom =
         !this.dateFromFilter ||
-        new Date(pollution.observationDate) >= new Date(this.dateFromFilter);
+        new Date(pollution.discoveryDate) >= new Date(this.dateFromFilter);
 
       const matchesDateTo =
         !this.dateToFilter ||
-        new Date(pollution.observationDate) <= new Date(this.dateToFilter);
+        new Date(pollution.discoveryDate) <= new Date(this.dateToFilter);
 
       return (
         matchesTitle &&

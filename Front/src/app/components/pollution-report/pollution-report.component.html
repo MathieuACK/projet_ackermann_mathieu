@@ -57,19 +57,17 @@
         <input
           type="date"
           id="observation-date"
-          formControlName="observationDate"
+          formControlName="discoveryDate"
         />
         @if (
-          (pollutionForm.get("observationDate")?.touched || submitted) &&
-          pollutionForm.get("observationDate")?.invalid
+          (pollutionForm.get("discoveryDate")?.touched || submitted) &&
+          pollutionForm.get("discoveryDate")?.invalid
         ) {
           <div class="error-message">
-            @if (pollutionForm.get("observationDate")?.errors?.["futureDate"]) {
+            @if (pollutionForm.get("discoveryDate")?.errors?.["futureDate"]) {
               <small>La date ne peut pas être dans le futur.</small>
             }
-            @if (
-              !pollutionForm.get("observationDate")?.errors?.["futureDate"]
-            ) {
+            @if (!pollutionForm.get("discoveryDate")?.errors?.["futureDate"]) {
               <small>La date est requise.</small>
             }
           </div>

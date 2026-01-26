@@ -15,7 +15,7 @@ export const pollutionModel = (sequelize: Sequelize) => {
     location: {
       type: DataTypes.STRING,
     },
-    observationDate: {
+    discoveryDate: {
       type: DataTypes.DATE,
     },
     pollutionType: {

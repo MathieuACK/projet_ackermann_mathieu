@@ -55,7 +55,7 @@ export class PollutionReportComponent implements OnInit {
       Validators.required,
       Validators.minLength(10),
     ]),
-    observationDate: new FormControl('', [
+    discoveryDate: new FormControl('', [
       Validators.required,
       noFutureDateValidator,
     ]),
@@ -120,7 +120,7 @@ export class PollutionReportComponent implements OnInit {
       title: rawFromValue.title,
       pollutionType: rawFromValue.pollutionType,
       description: rawFromValue.description,
-      observationDate: rawFromValue.observationDate,
+      discoveryDate: rawFromValue.discoveryDate,
       location: rawFromValue.location,
       latitude: Number(rawFromValue.latitude),
       longitude: Number(rawFromValue.longitude),

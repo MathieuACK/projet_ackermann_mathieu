@@ -3,7 +3,7 @@ export interface Pollution {
   title: string;
   pollutionType: string;
   description: string;
-  observationDate: string;
+  discoveryDate: string;
   location: string;
   latitude: number;
   longitude: number;

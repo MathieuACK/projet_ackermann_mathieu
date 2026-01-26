@@ -138,13 +138,13 @@
                 <span class="info-label">Date d'observation</span>
                 @if (!editMode) {
                   <span class="info-value">
-                    {{ pollution.observationDate | date: "dd MMMM yyyy" }}
+                    {{ pollution.discoveryDate | date: "dd MMMM yyyy" }}
                   </span>
                 }
                 @if (editMode) {
                   <input
                     type="date"
-                    [(ngModel)]="editablePollution!.observationDate"
+                    [(ngModel)]="editablePollution!.discoveryDate"
                   />
                 }
               </div>
