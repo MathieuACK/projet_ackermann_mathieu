@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  backendClient: 'https://tp07-ackermann-mathieu-latest.onrender.com',
-  apiUrl: 'https://tp07-ackermann-mathieu-latest.onrender.com',
+  backendClient: 'https://projet-ackermann-mathieu-latest.onrender.com',
+  apiUrl: 'https://projet-ackermann-mathieu-latest.onrender.com',
 };
