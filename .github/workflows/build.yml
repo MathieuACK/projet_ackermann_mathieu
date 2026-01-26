@@ -10,7 +10,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: mathieuack/tp07_ackermann_mathieu
+  IMAGE_NAME: mathieuack/projet_ackermann_mathieu
 
 jobs:
   build-and-publish:
