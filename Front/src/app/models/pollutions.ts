@@ -8,4 +8,7 @@ export interface Pollution {
   latitude: number;
   longitude: number;
   photographUrl?: string | null;
+  photographData?: string | null;
+  discovererName?: string;
+  discovererEmail?: string;
 }

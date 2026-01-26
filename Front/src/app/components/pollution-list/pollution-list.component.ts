@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { PollutionsService } from '../../services/pollutions/pollutions.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { Pollution } from '../../models/pollutions';
@@ -30,6 +31,10 @@ export class PollutionListComponent implements OnInit {
   dateFromFilter: string = '';
   dateToFilter: string = '';
 
+  // Subjects pour le debounce
+  private titleFilterSubject = new Subject<string>();
+  private locationFilterSubject = new Subject<string>();
+
   pollutionTypes: string[] = [
     'Plastique',
     'Chimique',
@@ -43,7 +48,7 @@ export class PollutionListComponent implements OnInit {
     private pollutionsService: PollutionsService,
     private router: Router,
     private store: Store,
-    private auth: AuthService
+    private auth: AuthService,
   ) {
     this.isLogged = this.auth.isLoggedIn();
     this.auth.getCurrentUser().subscribe((u) => (this.isLogged = !!u));
@@ -51,6 +56,30 @@ export class PollutionListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPollutions();
+
+    // Configuration du debounce pour le titre (300ms)
+    this.titleFilterSubject
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((value) => {
+        this.titleFilter = value;
+        this.applyFilters();
+      });
+
+    // Configuration du debounce pour la localisation (300ms)
+    this.locationFilterSubject
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((value) => {
+        this.locationFilter = value;
+        this.applyFilters();
+      });
+  }
+
+  onTitleFilterChange(value: string): void {
+    this.titleFilterSubject.next(value);
+  }
+
+  onLocationFilterChange(value: string): void {
+    this.locationFilterSubject.next(value);
   }
 
   loadPollutions(): void {

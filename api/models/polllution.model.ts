@@ -34,5 +34,21 @@ export const pollutionModel = (sequelize: Sequelize) => {
     photographUrl: {
       type: DataTypes.STRING,
     },
+    photographData: {
+      type: DataTypes.TEXT("long"),
+      allowNull: true,
+      comment: "Image stored as base64 string",
+    },
+    discovererName: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    discovererEmail: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        isEmail: true,
+      },
+    },
   });
 };

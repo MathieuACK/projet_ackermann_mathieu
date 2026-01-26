@@ -11,8 +11,8 @@
         <input
           type="text"
           id="titleFilter"
-          [(ngModel)]="titleFilter"
-          (input)="applyFilters()"
+          [ngModel]="titleFilter"
+          (ngModelChange)="onTitleFilterChange($event)"
           placeholder="Rechercher par titre..."
           class="form-control"
         />
@@ -28,9 +28,9 @@
         >
           <option value="">Tous les types</option>
           @for (type of pollutionTypes; track $index) {
-          <option [value]="type">
-            {{ type }}
-          </option>
+            <option [value]="type">
+              {{ type }}
+            </option>
           }
         </select>
       </div>
@@ -40,8 +40,8 @@
         <input
           type="text"
           id="locationFilter"
-          [(ngModel)]="locationFilter"
-          (input)="applyFilters()"
+          [ngModel]="locationFilter"
+          (ngModelChange)="onLocationFilterChange($event)"
           placeholder="Rechercher par lieu..."
           class="form-control"
         />
@@ -83,72 +83,72 @@
     </p>
 
     @if (filteredPollutions.length === 0) {
-    <div class="no-results">
-      <p>Aucune pollution ne correspond à vos critères de recherche.</p>
-    </div>
+      <div class="no-results">
+        <p>Aucune pollution ne correspond à vos critères de recherche.</p>
+      </div>
     }
 
     <div class="pollutions-grid">
       @for (pollution of filteredPollutions; track $index) {
-      <div class="pollution-card">
-        <div class="pollution-header">
-          <h3>{{ pollution.title }}</h3>
-          <span class="pollution-type">{{ pollution.pollutionType }}</span>
-        </div>
-
-        <div class="pollution-body">
-          <p class="pollution-description">
-            {{ pollution.description.substring(0, 100) }}
-            {{ pollution.description.length > 100 ? "..." : "" }}
-          </p>
-
-          <div class="pollution-info">
-            <div class="info-item">
-              <strong>📍 Localisation:</strong> {{ pollution.location }}
-            </div>
-            <div class="info-item">
-              <strong>📅 Date:</strong>
-              {{ pollution.observationDate | date : "dd/MM/yyyy" }}
-            </div>
-            <div class="info-item">
-              <strong>🌍 Coordonnées:</strong>
-              {{ pollution.latitude }}, {{ pollution.longitude }}
-            </div>
+        <div class="pollution-card">
+          <div class="pollution-header">
+            <h3>{{ pollution.title }}</h3>
+            <span class="pollution-type">{{ pollution.pollutionType }}</span>
           </div>
 
-          @if (pollution.photographUrl) {
-          <div class="pollution-image">
-            <img
-              [src]="pollution.photographUrl"
-              [alt]="pollution.title"
-              (error)="$any($event.target).src = 'assets/placeholder.png'"
-            />
-          </div>
-          }
-        </div>
+          <div class="pollution-body">
+            <p class="pollution-description">
+              {{ pollution.description.substring(0, 100) }}
+              {{ pollution.description.length > 100 ? "..." : "" }}
+            </p>
 
-        <div class="pollution-actions">
-          <button class="btn btn-info" (click)="viewDetail(pollution.id)">
-            Voir détails
-          </button>
-          @if (isLogged) {
-          <button
-            class="btn"
-            [class.btn-favorite]="isFavorite(pollution.id)"
-            [class.btn-add-favorite]="!isFavorite(pollution.id)"
-            (click)="toggleFavorite(pollution)"
-          >
-            {{ isFavorite(pollution.id) ? "❤️ Retirer" : "🤍 Favoris" }}
-          </button>
-          }
-          <button
-            class="btn btn-danger"
-            (click)="deletePollution(pollution.id)"
-          >
-            🗑️ Supprimer
-          </button>
+            <div class="pollution-info">
+              <div class="info-item">
+                <strong>📍 Localisation:</strong> {{ pollution.location }}
+              </div>
+              <div class="info-item">
+                <strong>📅 Date:</strong>
+                {{ pollution.observationDate | date: "dd/MM/yyyy" }}
+              </div>
+              <div class="info-item">
+                <strong>🌍 Coordonnées:</strong>
+                {{ pollution.latitude }}, {{ pollution.longitude }}
+              </div>
+            </div>
+
+            @if (pollution.photographData || pollution.photographUrl) {
+              <div class="pollution-image">
+                <img
+                  [src]="pollution.photographData || pollution.photographUrl"
+                  [alt]="pollution.title"
+                  (error)="$any($event.target).src = 'assets/placeholder.png'"
+                />
+              </div>
+            }
+          </div>
+
+          <div class="pollution-actions">
+            <button class="btn btn-info" (click)="viewDetail(pollution.id)">
+              Voir détails
+            </button>
+            @if (isLogged) {
+              <button
+                class="btn"
+                [class.btn-favorite]="isFavorite(pollution.id)"
+                [class.btn-add-favorite]="!isFavorite(pollution.id)"
+                (click)="toggleFavorite(pollution)"
+              >
+                {{ isFavorite(pollution.id) ? "❤️ Retirer" : "🤍 Favoris" }}
+              </button>
+            }
+            <button
+              class="btn btn-danger"
+              (click)="deletePollution(pollution.id)"
+            >
+              🗑️ Supprimer
+            </button>
+          </div>
         </div>
-      </div>
       }
     </div>
   </div>

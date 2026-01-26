@@ -1,53 +1,70 @@
 @if (pollutionFormValues) {
-<div class="pollution-summary-card">
-  <h1>Récapitulatif de votre déclaration de pollution</h1>
+  <div class="pollution-summary-card">
+    <h1>Récapitulatif de votre déclaration de pollution</h1>
 
-  <div>
-    <div class="summary-item">
-      <strong>Titre</strong>
-      <div>{{ pollutionFormValues.title }}</div>
+    <div>
+      <div class="summary-item">
+        <strong>Titre</strong>
+        <div>{{ pollutionFormValues.title }}</div>
+      </div>
+      <div class="summary-item">
+        <strong>Type</strong>
+        <div>{{ pollutionFormValues.pollutionType }}</div>
+      </div>
+      <div class="summary-item">
+        <strong>Description</strong>
+        <div>{{ pollutionFormValues.description }}</div>
+      </div>
+      <div class="summary-item">
+        <strong>Date</strong>
+        <div>{{ pollutionFormValues.observationDate }}</div>
+      </div>
+      <div class="summary-item">
+        <strong>Lieu</strong>
+        <div>{{ pollutionFormValues.location }}</div>
+      </div>
+      <div class="summary-item">
+        <strong>Latitude</strong>
+        <div>{{ pollutionFormValues.latitude }}</div>
+      </div>
+      <div class="summary-item">
+        <strong>Longitude</strong>
+        <div>{{ pollutionFormValues.longitude }}</div>
+      </div>
+      @if (pollutionFormValues.discovererName) {
+        <div class="summary-item">
+          <strong>Découvreur</strong>
+          <div>{{ pollutionFormValues.discovererName }}</div>
+        </div>
+      }
+      @if (pollutionFormValues.discovererEmail) {
+        <div class="summary-item">
+          <strong>Email du découvreur</strong>
+          <div>{{ pollutionFormValues.discovererEmail }}</div>
+        </div>
+      }
     </div>
-    <div class="summary-item">
-      <strong>Type</strong>
-      <div>{{ pollutionFormValues.pollutionType }}</div>
-    </div>
-    <div class="summary-item">
-      <strong>Description</strong>
-      <div>{{ pollutionFormValues.description }}</div>
-    </div>
-    <div class="summary-item">
-      <strong>Date</strong>
-      <div>{{ pollutionFormValues.observationDate }}</div>
-    </div>
-    <div class="summary-item">
-      <strong>Lieu</strong>
-      <div>{{ pollutionFormValues.location }}</div>
-    </div>
-    <div class="summary-item">
-      <strong>Latitude</strong>
-      <div>{{ pollutionFormValues.latitude }}</div>
-    </div>
-    <div class="summary-item">
-      <strong>Longitude</strong>
-      <div>{{ pollutionFormValues.longitude }}</div>
+
+    @if (
+      pollutionFormValues.photographData || pollutionFormValues.photographUrl
+    ) {
+      <div class="summary-item photo-section">
+        <strong>Photo</strong>
+        <img
+          [src]="
+            pollutionFormValues.photographData ||
+            pollutionFormValues.photographUrl
+          "
+          alt="photo"
+          class="photo-preview"
+        />
+      </div>
+    }
+
+    <div class="summary-actions">
+      <button (click)="reset.emit()" class="reset-button">
+        Faire un autre signalement
+      </button>
     </div>
   </div>
-
-  @if (pollutionFormValues.photographUrl) {
-  <div class="summary-item photo-section">
-    <strong>Photo</strong>
-    <img
-      [src]="pollutionFormValues.photographUrl"
-      alt="photo"
-      class="photo-preview"
-    />
-  </div>
-  }
-
-  <div class="summary-actions">
-    <button (click)="reset.emit()" class="reset-button">
-      Faire un autre signalement
-    </button>
-  </div>
-</div>
 }

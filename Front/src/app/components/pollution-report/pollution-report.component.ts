@@ -13,7 +13,7 @@ import { Pollution } from '../../models/pollutions';
 import { PollutionsService } from '../../services/pollutions/pollutions.service';
 
 function noFutureDateValidator(
-  control: AbstractControl
+  control: AbstractControl,
 ): ValidationErrors | null {
   if (!control.value) return null;
   const today = new Date();
@@ -24,16 +24,18 @@ function noFutureDateValidator(
 }
 
 @Component({
-    selector: 'app-pollution-report',
-    imports: [ReactiveFormsModule, CommonModule, PollutionSummaryComponent],
-    templateUrl: './pollution-report.component.html',
-    styleUrls: ['./pollution-report.component.css']
+  selector: 'app-pollution-report',
+  imports: [ReactiveFormsModule, CommonModule, PollutionSummaryComponent],
+  templateUrl: './pollution-report.component.html',
+  styleUrls: ['./pollution-report.component.css'],
 })
 export class PollutionReportComponent implements OnInit {
   pollutionFormValid: boolean = false;
   pollutionFormValues: Pollution | null = null;
   submitted = false;
   nextId: number = 1;
+  selectedFile: File | null = null;
+  imagePreview: string | null = null;
 
   constructor(private pollutionsService: PollutionsService) {}
 
@@ -68,8 +70,41 @@ export class PollutionReportComponent implements OnInit {
       Validators.min(-180),
       Validators.max(180),
     ]),
-    photographUrl: new FormControl('', Validators.pattern('https?://.+')),
+    photographUrl: new FormControl(''),
+    discovererName: new FormControl('', Validators.required),
+    discovererEmail: new FormControl('', [
+      Validators.required,
+      Validators.email,
+    ]),
   });
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+
+      // Vérifier le type de fichier
+      if (!file.type.startsWith('image/')) {
+        alert('Veuillez sélectionner un fichier image valide');
+        return;
+      }
+
+      // Vérifier la taille (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert("La taille de l'image ne doit pas dépasser 5MB");
+        return;
+      }
+
+      this.selectedFile = file;
+
+      // Créer un aperçu de l'image
+      const reader = new FileReader();
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        this.imagePreview = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
 
   onSubmit() {
     this.submitted = true;
@@ -90,6 +125,9 @@ export class PollutionReportComponent implements OnInit {
       latitude: Number(rawFromValue.latitude),
       longitude: Number(rawFromValue.longitude),
       photographUrl: rawFromValue.photographUrl || null,
+      photographData: this.imagePreview || null,
+      discovererName: rawFromValue.discovererName,
+      discovererEmail: rawFromValue.discovererEmail,
     };
     this.pollutionFormValid = true;
     this.pollutionsService
@@ -113,5 +151,7 @@ export class PollutionReportComponent implements OnInit {
     this.pollutionFormValid = false;
     this.pollutionFormValues = null;
     this.submitted = false;
+    this.selectedFile = null;
+    this.imagePreview = null;
   }
 }
