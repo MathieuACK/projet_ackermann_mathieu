@@ -9,9 +9,10 @@ import { CommonModule } from '@angular/common';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { PollutionModule } from './pollution/pollution.module';
-import { AuthService } from './services/auth/auth.service';
 import { FavoritesState } from './shared/states/favorites.state';
+import { AuthState } from './shared/states/auth-states';
 import { Logout } from './shared/actions/auth-action';
+import { User } from './models/users';
 
 @Component({
   selector: 'app-root',
@@ -32,14 +33,17 @@ export class AppComponent implements OnInit {
   @Select(FavoritesState.getFavoritesCount)
   favoritesCount$!: Observable<number>;
 
+  @Select(AuthState.getUser)
+  user$!: Observable<User | null>;
+
   constructor(
-    private auth: AuthService,
     private store: Store,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
-    this.auth.getCurrentUser().subscribe((u) => {
+    // Subscribe to user changes from NGXS store
+    this.user$.subscribe((u) => {
       this.userName = u ? `${u.firstname} ${u.lastname}` : '';
     });
   }

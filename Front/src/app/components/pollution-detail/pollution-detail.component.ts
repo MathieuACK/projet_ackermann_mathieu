@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Store } from '@ngxs/store';
+import { Store, Select } from '@ngxs/store';
+import { Observable } from 'rxjs';
 import { PollutionsService } from '../../services/pollutions/pollutions.service';
 import { Pollution } from '../../models/pollutions';
-import { AuthService } from '../../services/auth/auth.service';
 import { FavoritesState } from '../../shared/states/favorites.state';
+import { AuthState } from '../../shared/states/auth-states';
 import {
   AddFavorite,
   RemoveFavorite,
@@ -27,15 +28,19 @@ export class PollutionDetailComponent implements OnInit {
 
   isLogged = false;
 
+  @Select(AuthState.isConnected)
+  isConnected$!: Observable<boolean>;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private pollutionsService: PollutionsService,
-    private auth: AuthService,
-    private store: Store
+    private store: Store,
   ) {
-    this.isLogged = this.auth.isLoggedIn();
-    this.auth.getCurrentUser().subscribe((u) => (this.isLogged = !!u));
+    // Subscribe to connection state from NGXS store
+    this.isConnected$.subscribe((connected) => {
+      this.isLogged = connected;
+    });
   }
 
   ngOnInit(): void {
@@ -122,7 +127,7 @@ export class PollutionDetailComponent implements OnInit {
   isFavorite(): boolean {
     if (!this.pollution) return false;
     return this.store.selectSnapshot(FavoritesState.isFavorite)(
-      this.pollution.id
+      this.pollution.id,
     );
   }
 

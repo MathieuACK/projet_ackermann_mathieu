@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { Store } from '@ngxs/store';
+import { Store, Select } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { PollutionsService } from '../../services/pollutions/pollutions.service';
-import { AuthService } from '../../services/auth/auth.service';
 import { Pollution } from '../../models/pollutions';
 import { FavoritesState } from '../../shared/states/favorites.state';
+import { AuthState } from '../../shared/states/auth-states';
 import {
   AddFavorite,
   RemoveFavorite,
@@ -44,14 +44,18 @@ export class PollutionListComponent implements OnInit {
     'Autre',
   ];
 
+  @Select(AuthState.isConnected)
+  isConnected$!: Observable<boolean>;
+
   constructor(
     private pollutionsService: PollutionsService,
     private router: Router,
     private store: Store,
-    private auth: AuthService,
   ) {
-    this.isLogged = this.auth.isLoggedIn();
-    this.auth.getCurrentUser().subscribe((u) => (this.isLogged = !!u));
+    // Subscribe to connection state from NGXS store
+    this.isConnected$.subscribe((connected) => {
+      this.isLogged = connected;
+    });
   }
 
   ngOnInit(): void {

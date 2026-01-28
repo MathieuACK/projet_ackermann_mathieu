@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Login, Register } from '../../shared/actions/auth-action';
+import { AuthState } from '../../shared/states/auth-states';
 
 @Component({
   selector: 'app-login',
@@ -19,17 +20,20 @@ export class LoginComponent {
   error = '';
   signupMode = false;
 
-  constructor(private store: Store, private router: Router) {}
+  constructor(
+    private store: Store,
+    private router: Router,
+  ) {}
 
   submit() {
     this.error = '';
 
     if (!this.signupMode) {
-      // Login with JWT
+      // Login with JWT - Check store instead of localStorage
       this.store.dispatch(new Login(this.login, this.password)).subscribe({
         next: () => {
-          // Check if login was successful
-          const token = localStorage.getItem('accessToken');
+          // Check if login was successful via NGXS store
+          const token = this.store.selectSnapshot(AuthState.getAccessToken);
           if (token) {
             this.router.navigate(['/pollution/list']);
           } else {
@@ -41,14 +45,20 @@ export class LoginComponent {
         },
       });
     } else {
-      // Register
+      // Register - Check store instead of localStorage
       this.store
         .dispatch(
-          new Register(this.login, this.password, this.firstname, this.lastname)
+          new Register(
+            this.login,
+            this.password,
+            this.firstname,
+            this.lastname,
+          ),
         )
         .subscribe({
           next: () => {
-            const token = localStorage.getItem('accessToken');
+            // Check if registration was successful via NGXS store
+            const token = this.store.selectSnapshot(AuthState.getAccessToken);
             if (token) {
               this.router.navigate(['/pollution/list']);
             } else {

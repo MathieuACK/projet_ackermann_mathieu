@@ -43,7 +43,7 @@ export class AuthState {
   @Action(AuthConnexion)
   add(
     { getState, patchState }: StateContext<AuthStateModel>,
-    { payload }: AuthConnexion
+    { payload }: AuthConnexion,
   ) {
     patchState({
       connexion: payload.connexion,
@@ -53,7 +53,7 @@ export class AuthState {
   @Action(Login)
   login(
     { dispatch }: StateContext<AuthStateModel>,
-    { email, password }: Login
+    { email, password }: Login,
   ) {
     return this.authService.login(email, password).pipe(
       tap((response) => {
@@ -66,18 +66,16 @@ export class AuthState {
       catchError((error) => {
         dispatch(new LoginFailure(error.message || 'Login failed'));
         return of(null);
-      })
+      }),
     );
   }
 
   @Action(LoginSuccess)
   loginSuccess(
     { patchState }: StateContext<AuthStateModel>,
-    { accessToken, user }: LoginSuccess
+    { accessToken, user }: LoginSuccess,
   ) {
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('currentUser', JSON.stringify(user));
-
+    // Store only in NGXS state - NO localStorage
     patchState({
       connexion: true,
       accessToken,
@@ -88,16 +86,14 @@ export class AuthState {
   @Action(LoginFailure)
   loginFailure(
     { patchState }: StateContext<AuthStateModel>,
-    { error }: LoginFailure
+    { error }: LoginFailure,
   ) {
     console.error('Login failed:', error);
   }
 
   @Action(Logout)
   logout({ patchState }: StateContext<AuthStateModel>) {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('currentUser');
-
+    // Clear only NGXS state - NO localStorage
     patchState({
       connexion: false,
       accessToken: null,
@@ -108,7 +104,7 @@ export class AuthState {
   @Action(Register)
   register(
     { dispatch }: StateContext<AuthStateModel>,
-    { login, password, firstname, lastname }: Register
+    { login, password, firstname, lastname }: Register,
   ) {
     return this.authService.register(login, password, firstname, lastname).pipe(
       tap((response) => {
@@ -121,7 +117,7 @@ export class AuthState {
       catchError((error) => {
         dispatch(new LoginFailure(error.message || 'Registration failed'));
         return of(null);
-      })
+      }),
     );
   }
 }
