@@ -3,8 +3,9 @@ import { DataTypes, Sequelize } from "sequelize";
 export const usersModel = (sequelize: Sequelize) => {
   const Users = sequelize.define("users", {
     id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       primaryKey: true,
+      autoIncrement: true,
       allowNull: false,
     },
     lastname: {
