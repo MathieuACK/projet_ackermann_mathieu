@@ -16,5 +16,5 @@ export class ClearFavorites {
 
 export class SetCurrentUser {
   static readonly type = '[Favorites] Set Current User';
-  constructor(public userId: string | null) {}
+  constructor(public userId: number | null) {}
 }

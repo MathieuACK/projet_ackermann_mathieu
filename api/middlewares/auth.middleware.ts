@@ -5,7 +5,7 @@ import config from "../config";
 // Extend Express Request type to include user
 export interface AuthRequest extends Request {
   user?: {
-    id: string;
+    id: number;
     login: string;
   };
 }
@@ -38,7 +38,7 @@ export function authenticateJWT(
 
   try {
     const decoded = jwt.verify(token, config.JWT_SECRET) as {
-      id: string;
+      id: number;
       login: string;
     };
 

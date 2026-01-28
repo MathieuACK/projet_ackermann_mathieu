@@ -40,10 +40,18 @@
     }
 
     <button class="btn btn-primary" type="submit">
-      {{ signupMode ? "Créer le compte" : "Se connecter" }}
+      @if (signupMode) {
+        Créer le compte
+      } @else {
+        Se connecter
+      }
     </button>
     <button type="button" class="btn btn-link" (click)="toggleSignup()">
-      {{ signupMode ? "J'ai déjà un compte" : "Créer un compte" }}
+      @if (signupMode) {
+        J'ai déjà un compte
+      } @else {
+        Créer un compte
+      }
     </button>
   </form>
 </div>

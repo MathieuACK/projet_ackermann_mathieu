@@ -1,11 +1,11 @@
 import { Pollution } from '../../models/pollutions';
 
 export interface FavoriteItem {
-  userId: string;
+  userId: number;
   pollution: Pollution;
 }
 
 export interface FavoritesStateModel {
   favorites: FavoriteItem[];
-  currentUserId: string | null;
+  currentUserId: number | null;
 }

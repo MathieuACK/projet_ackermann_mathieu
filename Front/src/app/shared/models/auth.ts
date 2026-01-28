@@ -5,7 +5,7 @@ export interface Auth {
 export interface AuthResponse {
   accessToken: string;
   user: {
-    id: string;
+    id: number;
     login: string;
     firstname: string;
     lastname: string;
